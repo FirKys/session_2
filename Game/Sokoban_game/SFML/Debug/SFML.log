@@ -1,0 +1,16 @@
+﻿Сборка начата 14.12.2014 11:49:48.
+     1>Проект "C:\Users\FirKys\documents\visual studio 2013\Projects\SFML\SFML\SFML.vcxproj" в узле 2 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\FirKys\Downloads\SFML-Visual_Studio2013x32\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt block.cpp
+         block.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\FirKys\documents\visual studio 2013\Projects\SFML\Debug\SFML.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\FirKys\Downloads\SFML-Visual_Studio2013x32\lib" "sfml-graphics-d.lib" "sfml-system-d.lib" "sfml-window-d.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\FirKys\documents\visual studio 2013\Projects\SFML\Debug\SFML.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\FirKys\documents\visual studio 2013\Projects\SFML\Debug\SFML.lib" /MACHINE:X86 Debug\block.obj
+         Debug\finish.obj
+         Debug\main.obj
+         Debug\player.obj
+         SFML.vcxproj -> C:\Users\FirKys\documents\visual studio 2013\Projects\SFML\Debug\SFML.exe
+     1>Сборка проекта "C:\Users\FirKys\documents\visual studio 2013\Projects\SFML\SFML\SFML.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+Затраченное время: 00:00:06.00

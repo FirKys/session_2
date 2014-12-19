@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Galaga_game", "Galaga_game\Galaga_game.vcxproj", "{21FE426C-B944-4A91-B4C3-716D16AFAE71}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21FE426C-B944-4A91-B4C3-716D16AFAE71}.Debug|Win32.ActiveCfg = Debug|Win32
+		{21FE426C-B944-4A91-B4C3-716D16AFAE71}.Debug|Win32.Build.0 = Debug|Win32
+		{21FE426C-B944-4A91-B4C3-716D16AFAE71}.Release|Win32.ActiveCfg = Release|Win32
+		{21FE426C-B944-4A91-B4C3-716D16AFAE71}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
