@@ -1,0 +1,4 @@
+Cat:it's cat
+Dog:it's dog
+Milk:it's milk
+Sheep:it's sheep
