@@ -7,7 +7,7 @@
 #include <iterator>
 #include <vector>
 
-#define dictionary "dictionary.txt"
+#define dictionary "word.txt"
 #define RUS setlocale(LC_ALL, "Russian")
 
 using namespace std;
@@ -35,7 +35,7 @@ int main() {
 	//записываем слова в вектор
 	while (!is.eof()) {
 		is >> buffer;
-		cout << "Сожрал слово: " << buffer << endl;
+		
 
 		buftest.word = buffer;
 		buftest.value = 0;
@@ -48,6 +48,7 @@ int main() {
 			}	 
 
 		text.push_back(buftest);
+		cout << "Добавлено слово: " << buffer << endl;
 	}
 
 
