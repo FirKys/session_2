@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Arti_game", "Arti_game\Arti_game.vcxproj", "{361E8B3D-2193-424F-8C37-7C3A33028609}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{361E8B3D-2193-424F-8C37-7C3A33028609}.Debug|Win32.ActiveCfg = Debug|Win32
+		{361E8B3D-2193-424F-8C37-7C3A33028609}.Debug|Win32.Build.0 = Debug|Win32
+		{361E8B3D-2193-424F-8C37-7C3A33028609}.Release|Win32.ActiveCfg = Release|Win32
+		{361E8B3D-2193-424F-8C37-7C3A33028609}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

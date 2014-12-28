@@ -1,0 +1,13 @@
+﻿Сборка начата 28.12.2014 13:28:42.
+     1>Проект "C:\Users\FirKys\documents\visual studio 2013\Projects\Arti_game\Arti_game\Arti_game.vcxproj" в узле 2 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\FirKys\Downloads\SFML-Visual_Studio2013x32\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\FirKys\documents\visual studio 2013\Projects\Arti_game\Debug\Arti_game.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\FirKys\Downloads\SFML-Visual_Studio2013x32\lib" "sfml-graphics-d.lib" "sfml-system-d.lib" "sfml-window-d.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\FirKys\documents\visual studio 2013\Projects\Arti_game\Debug\Arti_game.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\FirKys\documents\visual studio 2013\Projects\Arti_game\Debug\Arti_game.lib" /MACHINE:X86 Debug\main.obj
+         Arti_game.vcxproj -> C:\Users\FirKys\documents\visual studio 2013\Projects\Arti_game\Debug\Arti_game.exe
+     1>Сборка проекта "C:\Users\FirKys\documents\visual studio 2013\Projects\Arti_game\Arti_game\Arti_game.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+Затраченное время: 00:00:02.73
