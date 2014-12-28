@@ -6,21 +6,21 @@
 using namespace std;
 using namespace sf;
 
-//Ќастройки разрешениЯ окна
+//РќР°СЃС‚СЂРѕР№РєРё СЂР°Р·СЂРµС€РµРЅРёСЏ РѕРєРЅР°
 struct window
 {
 	unsigned int x = 800;
 	unsigned int y = 500;
 } windows;
 
-//Љласс игрока
+//РљР»Р°СЃСЃ РёРіСЂРѕРєР°
 class Player
 {
 public:
-	RectangleShape rectangle;		//‘ам игрок (квадрат)
-	VertexArray turret;				//Џушка игрока
-	int player;						//ID игрока
-	float angle;					//ѓрадус пушки
+	RectangleShape rectangle;		//РЎР°Рј РёРіСЂРѕРє (РєРІР°РґСЂР°С‚)
+	VertexArray turret;				//РџСѓС€РєР° РёРіСЂРѕРєР°
+	int player;						//ID РёРіСЂРѕРєР°
+	float angle;					//Р“СЂР°РґСѓСЃ РїСѓС€РєРё
 
 	Player(int _player){
 		angle = 0.0;
@@ -31,11 +31,11 @@ public:
 
 };
 
-//Љласс пули
+//РљР»Р°СЃСЃ РїСѓР»Рё
 class Bullet{
 public:
-	CircleShape shape;	//круг
-	int side;			//‚ какую сторону летит: 1 - влево, 2 - вправо
+	CircleShape shape;	//РєСЂСѓРі
+	int side;			//Р’ РєР°РєСѓСЋ СЃС‚РѕСЂРѕРЅСѓ Р»РµС‚РёС‚: 1 - РІР»РµРІРѕ, 2 - РІРїСЂР°РІРѕ
 	int who;
 
 	Bullet(Vector2f coord, int _side, int _who){
@@ -46,14 +46,14 @@ public:
 		shape.setRadius(5);
 	}
 
-	//ЋбновлЯем координаты
+	//РћР±РЅРѕРІР»СЏРµРј РєРѕРѕСЂРґРёРЅР°С‚С‹
 	void update(){
 		Vector2f newcoord = { 1, 0 };
 
-		if (side == 1){			//ЏулЯ летит влево
+		if (side == 1){			//РџСѓР»СЏ Р»РµС‚РёС‚ РІР»РµРІРѕ
 			shape.setPosition(shape.getPosition() - newcoord);
 		}
-		else if (side == 2) {	//ЏулЯ летит вправо
+		else if (side == 2) {	//РџСѓР»СЏ Р»РµС‚РёС‚ РІРїСЂР°РІРѕ
 			shape.setPosition(shape.getPosition() + newcoord);
 		}
 	}
@@ -61,14 +61,14 @@ public:
 
 };
 
-//”ункциЯ выстрела
+//Р¤СѓРЅРєС†РёСЏ РІС‹СЃС‚СЂРµР»Р°
 void Fire(vector<Bullet> &bullet, Player & p, int side){
-	Vector2f coord = {0,0};
+	Vector2f coord = { 0, 0 };
 	coord = p.turret[1].position;
 	bullet.push_back(Bullet(coord, side, p.player));
 };
 
-//‘оздание пушки
+//РЎРѕР·РґР°РЅРёРµ РїСѓС€РєРё
 void CreateTurret(Player & p){
 	Vector2f pcoord = p.rectangle.getPosition();
 
@@ -97,7 +97,7 @@ void CreateTurret(Player & p){
 	}
 }
 
-//‘мещение пушки
+//РЎРјРµС‰РµРЅРёРµ РїСѓС€РєРё
 void move(Player & p, int code){
 	float x = 0, y = 0;
 	float r = 35;
@@ -127,24 +127,40 @@ void move(Player & p, int code){
 	}
 }
 
+//РўРѕС‡РєР° РІС…РѕРґРёС‚ РІ РєРІР°РґСЂР°С‚?
+bool Check(RectangleShape rect, CircleShape shape){
+	Vector2f coordrect = rect.getPosition();
+	Vector2f coordshape = shape.getPosition();
+
+	if (coordrect.x <= coordshape.x &&
+		coordrect.y <= coordshape.y &&
+		coordrect.x + rect.getSize().x >= coordshape.x &&
+		coordrect.y + rect.getSize().y >= coordshape.y)
+	{
+		return true;
+	}
+	else { return false; }
+}
+
+
 int main()
 {
-	short int player = 0;	// ID игрока
+	short int player = 0;	// ID РёРіСЂРѕРєР°
 
-	Player p1(++player);	//ID: 1 |левый игрок|
-	Player p2(++player);	//ID: 2 |правый игрок|
+	Player p1(++player);	//ID: 1 |Р»РµРІС‹Р№ РёРіСЂРѕРє|
+	Player p2(++player);	//ID: 2 |РїСЂР°РІС‹Р№ РёРіСЂРѕРє|
 
 	//cout << p1.player << " | " << p2.player << endl;
 
-	player = 1; //‘брасываем, теперь это будет служить в качестве определениЯ какой игрок ходит
+	player = 1; //РЎР±СЂР°СЃС‹РІР°РµРј, С‚РµРїРµСЂСЊ СЌС‚Рѕ Р±СѓРґРµС‚ СЃР»СѓР¶РёС‚СЊ РІ РєР°С‡РµСЃС‚РІРµ РѕРїСЂРµРґРµР»РµРЅРёСЏ РєР°РєРѕР№ РёРіСЂРѕРє С…РѕРґРёС‚
 
 	vector<Bullet> bullet;
 
-	p1.rectangle.setPosition(Vector2f(50.f, windows.y - 100.f));												//“станавливаем позицию первого игрока
-	p2.rectangle.setPosition(Vector2f(windows.x - (p1.rectangle.getSize().x + 50.f), windows.y - 100.f));		//“станавливаем позицию второго игрока
+	p1.rectangle.setPosition(Vector2f(50.f, windows.y - 100.f));												//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРѕР·РёС†РёСЋ РїРµСЂРІРѕРіРѕ РёРіСЂРѕРєР°
+	p2.rectangle.setPosition(Vector2f(windows.x - (p1.rectangle.getSize().x + 50.f), windows.y - 100.f));		//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРѕР·РёС†РёСЋ РІС‚РѕСЂРѕРіРѕ РёРіСЂРѕРєР°
 
-	CreateTurret(p1);	//‘оздаЮм турель первому игроку
-	CreateTurret(p2);	//‘оздаем турель второму игроку
+	CreateTurret(p1);	//РЎРѕР·РґР°С‘Рј С‚СѓСЂРµР»СЊ РїРµСЂРІРѕРјСѓ РёРіСЂРѕРєСѓ
+	CreateTurret(p2);	//РЎРѕР·РґР°РµРј С‚СѓСЂРµР»СЊ РІС‚РѕСЂРѕРјСѓ РёРіСЂРѕРєСѓ
 
 	RenderWindow window(VideoMode(windows.x, windows.y), "Artillery Game");
 
@@ -157,7 +173,7 @@ int main()
 				window.close();
 
 			if (event.type == Event::KeyPressed && event.key.code == Keyboard::Left || event.type == Event::KeyPressed && event.key.code == Keyboard::Right){
-				//чей ход?
+				//С‡РµР№ С…РѕРґ?
 				if (player == 1)
 					move(p1, event.key.code);
 				else if (player == 2)
@@ -165,45 +181,61 @@ int main()
 			}
 
 			if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space){
-				//чей ход?
+				//С‡РµР№ С…РѕРґ?
 				if (player == 1){
-					Fire(bullet, p1, 2);	//ЏулЯ летит от игрока p1 в правую сторону
-					player = 2;				//после выстрела, делаем что ходит другой игрок
+					Fire(bullet, p1, 2);	//РџСѓР»СЏ Р»РµС‚РёС‚ РѕС‚ РёРіСЂРѕРєР° p1 РІ РїСЂР°РІСѓСЋ СЃС‚РѕСЂРѕРЅСѓ
+					player = 2;				//РїРѕСЃР»Рµ РІС‹СЃС‚СЂРµР»Р°, РґРµР»Р°РµРј С‡С‚Рѕ С…РѕРґРёС‚ РґСЂСѓРіРѕР№ РёРіСЂРѕРє
 				}
 				else if (player == 2){
-					Fire(bullet, p2, 1);	//ЏулЯ летит от игрока p2 в левую сторону
-					player = 1;			//после выстрела, делаем что ходит другой игрок
+					Fire(bullet, p2, 1);	//РџСѓР»СЏ Р»РµС‚РёС‚ РѕС‚ РёРіСЂРѕРєР° p2 РІ Р»РµРІСѓСЋ СЃС‚РѕСЂРѕРЅСѓ
+					player = 1;			//РїРѕСЃР»Рµ РІС‹СЃС‚СЂРµР»Р°, РґРµР»Р°РµРј С‡С‚Рѕ С…РѕРґРёС‚ РґСЂСѓРіРѕР№ РёРіСЂРѕРє
 				}
 
 			}
 		}
 
-		//ЋбновлЯем координаты пули
+		//РћР±РЅРѕРІР»СЏРµРј РєРѕРѕСЂРґРёРЅР°С‚С‹ РїСѓР»Рё
 		for (vector<Bullet>::iterator it = bullet.begin(); it != bullet.end(); ++it)
 			it->update();
 
-		window.clear(Color::Black);		//Ћчищаем экран
+		window.clear(Color::Black);		//РћС‡РёС‰Р°РµРј СЌРєСЂР°РЅ
 
-		window.draw(p1.rectangle);		//ђисуем игрока p1
-		window.draw(p2.rectangle);		//ђисуем игрока p2
+		window.draw(p1.rectangle);		//Р РёСЃСѓРµРј РёРіСЂРѕРєР° p1
+		window.draw(p2.rectangle);		//Р РёСЃСѓРµРј РёРіСЂРѕРєР° p2
 
-		window.draw(p1.turret);			//ђисуем туррель длЯ игрока p2
-		window.draw(p2.turret);			//ђисуем туррель длЯ игрока p2
+		window.draw(p1.turret);			//Р РёСЃСѓРµРј С‚СѓСЂСЂРµР»СЊ РґР»СЏ РёРіСЂРѕРєР° p2
+		window.draw(p2.turret);			//Р РёСЃСѓРµРј С‚СѓСЂСЂРµР»СЊ РґР»СЏ РёРіСЂРѕРєР° p2
 
-		//рисуем наши пули
+		//СЂРёСЃСѓРµРј РЅР°С€Рё РїСѓР»Рё
 		for (vector<Bullet>::iterator it = bullet.begin(); it != bullet.end(); ++it){
 			window.draw(it->shape);
 		}
 
-		for (vector<Bullet>::iterator it = bullet.begin(); it != bullet.end(); ){
+		for (vector<Bullet>::iterator it = bullet.begin(); it != bullet.end();){
 			
-			//улетела пулька за экран?
-			if (it->shape.getPosition().x >= windows.x || it->shape.getPosition().x <= 0)
-				it = bullet.erase(it);	//удалЯем пули если улетела за границу
-			else ++it;	//переходим к след. пуле
+			//Р’ РёРіСЂРѕРєР° 1 РїРѕРїР°Р»Рё РїСѓР»Рё?
+			if (Check(p1.rectangle, it->shape)){
+				cout << "In the p1 hit by a bullet" << endl;
+				it = bullet.erase(it);	//СѓРґР°Р»СЏРµРј РїСѓР»СЋ
+				break;
+			}
 
-			//пулЯ попала во врага?
-			//if ()
+			//Р’ РёРіСЂРѕРєР° 2 РїРѕРїР°Р»Рё РїСѓР»Рё?
+			if (Check(p2.rectangle, it->shape)){
+				cout << "In the p2 hit by a bullet" << endl;
+				it = bullet.erase(it);	//СѓРґР°Р»СЏРµРј РїСѓР»СЋ
+				break;
+			}
+
+			//СѓР»РµС‚РµР»Р° РїСѓР»СЊРєР° Р·Р° СЌРєСЂР°РЅ?
+			if (it->shape.getPosition().x >= windows.x || it->shape.getPosition().x <= 0){
+				it = bullet.erase(it);	//СѓРґР°Р»СЏРµРј РїСѓР»Рё РµСЃР»Рё СѓР»РµС‚РµР»Р° Р·Р° РіСЂР°РЅРёС†Сѓ
+				break;
+			}
+
+			++it; //РїРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґ. РїСѓР»Рµ.
+
+
 		}
 
 		window.display();
