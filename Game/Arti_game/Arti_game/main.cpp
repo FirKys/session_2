@@ -1,22 +1,26 @@
 #include <iostream>
+#include <string>
+#include <vector>
 #include <SFML/Graphics.hpp>
 
 using namespace std;
 using namespace sf;
 
+//Настройки разрешения окна
 struct window
 {
 	unsigned int x = 800;
 	unsigned int y = 500;
-} window;
+} windows;
 
+//Класс игрока
 class Player
 {
 public:
-	RectangleShape rectangle;
-	VertexArray turret;
-	int player;
-	float angle;
+	RectangleShape rectangle;		//Сам игрок (квадрат)
+	VertexArray turret;				//Пушка игрока
+	int player;						//ID игрока
+	float angle;					//Градус пушки
 
 	Player(int _player){
 		angle = 0.0;
@@ -25,19 +29,46 @@ public:
 		rectangle.setFillColor(Color::Green);
 	};
 
-private:
 };
 
+//Класс пули
 class Bullet{
+public:
+	CircleShape shape;	//круг
+	int side;			//В какую сторону летит: 1 - влево, 2 - вправо
+	int who;
+
+	Bullet(Vector2f coord, int _side, int _who){
+		who = _who;
+		side = _side;
+		shape.setPosition(coord);
+		shape.setFillColor(Color::Red);
+		shape.setRadius(5);
+	}
+
+	//Обновляем координаты
+	void update(){
+		Vector2f newcoord = { 1, 0 };
+
+		if (side == 1){			//Пуля летит влево
+			shape.setPosition(shape.getPosition() - newcoord);
+		}
+		else if (side == 2) {	//Пуля летит вправо
+			shape.setPosition(shape.getPosition() + newcoord);
+		}
+	}
 
 
 };
 
-void Fire(vector<Bullet> &bullet, Player & p){
-
+//Функция выстрела
+void Fire(vector<Bullet> &bullet, Player & p, int side){
+	Vector2f coord = {0,0};
+	coord = p.turret[1].position;
+	bullet.push_back(Bullet(coord, side, p.player));
 };
 
-//—оздание пушки
+//Создание пушки
 void CreateTurret(Player & p){
 	Vector2f pcoord = p.rectangle.getPosition();
 
@@ -57,6 +88,7 @@ void CreateTurret(Player & p){
 	}
 	else if (p.player == 2)
 	{
+		p.angle = 3.1f;
 		x = p.rectangle.getPosition().x + r * cos(p.angle);
 		y = p.rectangle.getPosition().y + r * sin(p.angle);
 
@@ -65,7 +97,7 @@ void CreateTurret(Player & p){
 	}
 }
 
-//—мещение пушки
+//Смещение пушки
 void move(Player & p, int code){
 	float x = 0, y = 0;
 	float r = 35;
@@ -101,19 +133,20 @@ int main()
 
 	Player p1(++player);	//ID: 1 |левый игрок|
 	Player p2(++player);	//ID: 2 |правый игрок|
+
 	//cout << p1.player << " | " << p2.player << endl;
 
-	player = 1; //—брасываем, теперь это будет служить в качестве определени€ какой игрок ходит
+	player = 1; //Сбрасываем, теперь это будет служить в качестве определения какой игрок ходит
 
 	vector<Bullet> bullet;
 
-	p1.rectangle.setPosition(Vector2f(50.f, window.y - 100.f));												//”станавливаем позицию первого игрока
-	p2.rectangle.setPosition(Vector2f(window.x - (p1.rectangle.getSize().x + 50.f), window.y - 100.f));		//”станавливаем позицию второго игрока
+	p1.rectangle.setPosition(Vector2f(50.f, windows.y - 100.f));												//Устанавливаем позицию первого игрока
+	p2.rectangle.setPosition(Vector2f(windows.x - (p1.rectangle.getSize().x + 50.f), windows.y - 100.f));		//Устанавливаем позицию второго игрока
 
-	CreateTurret(p1);	//—оздаЄм турель первому игроку
-	CreateTurret(p2);	//—оздаем турель второму игроку
+	CreateTurret(p1);	//Создаём турель первому игроку
+	CreateTurret(p2);	//Создаем турель второму игроку
 
-	RenderWindow window(VideoMode(window.x, window.y), "Artillery Game");
+	RenderWindow window(VideoMode(windows.x, windows.y), "Artillery Game");
 
 	while (window.isOpen())
 	{
@@ -134,26 +167,45 @@ int main()
 			if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space){
 				//чей ход?
 				if (player == 1){
-					Fire(bullet, p1);
-					player = 2;			//после выстрела, делаем что ходит другой игрок
+					Fire(bullet, p1, 2);	//Пуля летит от игрока p1 в правую сторону
+					player = 2;				//после выстрела, делаем что ходит другой игрок
 				}
 				else if (player == 2){
-					Fire(bullet, p2);
+					Fire(bullet, p2, 1);	//Пуля летит от игрока p2 в левую сторону
 					player = 1;			//после выстрела, делаем что ходит другой игрок
 				}
 
 			}
 		}
 
-		window.clear(Color::Black);		//ќчищаем экран
+		//Обновляем координаты пули
+		for (vector<Bullet>::iterator it = bullet.begin(); it != bullet.end(); ++it)
+			it->update();
 
-		window.draw(p1.rectangle);		//–исуем игрока p1
-		window.draw(p2.rectangle);		//–исуем игрока p2
+		window.clear(Color::Black);		//Очищаем экран
 
-		window.draw(p1.turret);			//–исуем туррель дл€ игрока p2
-		window.draw(p2.turret);			//–исуем туррель дл€ игрока p2
+		window.draw(p1.rectangle);		//Рисуем игрока p1
+		window.draw(p2.rectangle);		//Рисуем игрока p2
 
-		//window.draw(convex);
+		window.draw(p1.turret);			//Рисуем туррель для игрока p2
+		window.draw(p2.turret);			//Рисуем туррель для игрока p2
+
+		//рисуем наши пули
+		for (vector<Bullet>::iterator it = bullet.begin(); it != bullet.end(); ++it){
+			window.draw(it->shape);
+		}
+
+		for (vector<Bullet>::iterator it = bullet.begin(); it != bullet.end(); ){
+			
+			//улетела пулька за экран?
+			if (it->shape.getPosition().x >= windows.x || it->shape.getPosition().x <= 0)
+				it = bullet.erase(it);	//удаляем пули если улетела за границу
+			else ++it;	//переходим к след. пуле
+
+			//пуля попала во врага?
+			//if ()
+		}
+
 		window.display();
 	}
 
