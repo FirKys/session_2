@@ -10,6 +10,7 @@
 
 #define file_open "dictionary.txt"	// Какое файл открываем
 #define file_save "out.txt"		// В какой сохраняем
+#define RUS setlocale(LC_ALL, "Russian")
 
 using namespace std;
 
@@ -27,7 +28,7 @@ word parser_text(string text);
 
 int main()
 {
-	setlocale(LC_ALL, "Russian");
+	RUS;
 
 	cout << "Словарь. 0.1v" << endl;
 
@@ -102,27 +103,53 @@ int main()
 	//=============================================
 
 	//=============================================
+	//Вывод данных 
+	cout << "\nВыводим данные из памяти:" << endl;
+	for (vector<word>::iterator it = box.begin(); it < box.end(); it++){
+		cout << it->key << "\t" << it->value << endl;
+	}
+	//Конец вывода данных
+	//============================================= 
+
+	//=============================================
 	//Поиск слова по первым буквам
-	string key = "hah";
-	int low, high, mid;
-	low = 0; high = box.size()-1;
-	while(low <= high) {
-		mid = (low+high)/2;
-		if(strncmp(key.data(),box[mid].key.data(), key.size()) < 0) high = mid-1;
-		else if(strncmp(key.data(),box[mid].key.data(), key.size()) > 0) low = mid+1;
-		else {cout << "Ты искал "<< key << ", а я нашел полное слово:" << box[mid].key.data() << endl; break;} /* ключ найден */
+	string key;
+	cout << "\nНапишите первые три буквы или слово целиком для поиска: " << endl;
+
+	getline(cin, key);
+
+	int mid = 0;				// переменная для хранения индекса среднего элемента массива
+	int l = 0;				// индекс первого элемента в массиве
+	int r = box.size();	// индекс последнего элемента в массиве
+
+	cout << "Возможные совпадения:" << endl;
+	while (l <= r)
+	{
+		mid = (r - l) / 2;
+		
+		if (strncmp(key.data(), box[mid].key.data(), key.size()) == 0){ cout << box[mid].key << endl; break; }
+		if (strncmp(key.data(), box[mid].key.data(), key.size()) == 1){ r = --mid; continue; }
+		if (strncmp(key.data(), box[mid].key.data(), key.size()) == -1){ l = ++mid; continue; }
+
+	}
+
+	int i = mid + 1;
+	while (strncmp(key.data(), box[i].key.data(), key.size()) == 0){
+		cout << box[i].key << endl;
+		++i;
+		if (i > (int)box.size()){ break; }	//не уходим за границу контейнера
+	}
+
+	int j = mid - 1;
+	while (strncmp(key.data(), box[j].key.data(), key.size()) == 0){
+		cout << box[j].key << endl;
+		--j;
+		if (j < 0){ break; }	//не уходим за границу контейнера
 	}
 	//Конец поиска
 	//=============================================
 
-	//=============================================
-	//Вывод данных 
-	cout << "Выводим данные из памяти:"<< endl;
-	for(vector<word>::iterator it = box.begin(); it < box.end();it++){
-		cout<< it->key << "  "<< it->value << endl;
-	}
-	//Конец вывода данных
-	//============================================= 
+
 
 	//=============================================
 	//Сохранение данных из памяти в файл

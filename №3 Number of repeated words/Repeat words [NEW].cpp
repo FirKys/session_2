@@ -46,14 +46,14 @@ int main() {
 	}
 
 	//создаем вектор из map'a
-	vector<pair<string,int>> vec(word.begin(), word.end());
+	vector<pair<string,int> > vec(word.begin(), word.end());
 	// сортируем этот вектор по значению, т.е числу повторов
 	sort(vec.begin(), vec.end(), check);
 
 	//выводим из вектора наши повторы :)
 	cout << "=========================== " << endl;
 	cout << "Найденные совпадения: " << endl;
-	for (vector<pair<string, int>>::iterator i = vec.begin(); i != vec.end(); i++) {
+	for (vector<pair<string, int> >::iterator i = vec.begin(); i != vec.end(); i++) {
 		if (i->second >= 2) //Выводить если найдено больше двух значений
 			cout << "Слово: " << i->first << " \tСовпадений: " << i->second << endl;
 	}
