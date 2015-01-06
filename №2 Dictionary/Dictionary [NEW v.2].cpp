@@ -169,6 +169,14 @@ int binarySearch(vector<word> source, string target)
 	//Проверки
 	if (size == 0)
 		return -1;
+	else if (strncmp(target.data(), source[0].key.data(), targetSize) < 0){				//искомый элемент меньше всех в массиве
+		cout << "! Искомый элемент меньше всех в массиве" << endl;
+		return -1;
+	}
+	else if (strncmp(target.data(), source[size - 1].key.data(), targetSize) > 0){ 		//искомый элемент больше всех в массиве
+		cout << "! Искомый элемент больше всех в массиве" << endl;
+		return -1;
+	}
 
 	//инициализация
 	int first = 0;
