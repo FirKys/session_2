@@ -1,4 +1,13 @@
-Cat:it's cat
-Dog:it's dog
-Milk:it's milk
-Sheep:it's sheep
+dog:123456
+milk:123456
+sheep:123456
+cat:123456
+carotk:123456
+woolf:123456
+catis:123456
+dogis:123456
+knakam:123456
+catos:123456
+catoooooo:123456
+castoooooo:123456
+acc:123456
