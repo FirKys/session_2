@@ -95,10 +95,9 @@ public:
 
 //Функция выстрела
 void Fire(vector<Bullet> &bullet, Player & p){
-	Vector2f coordBullet = { 0, 0 };
+
 	Vector2f coordTurret = p.turret[1].position;
-
-
+	
 	bullet.push_back(Bullet(coordTurret, p.player, p.test.angle));
 };
 
