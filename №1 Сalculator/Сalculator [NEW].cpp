@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 	IntStack number;
 	string line;
 
-	cout << "Приемер ввода примера:  4 4 + 4 - " << endl;
+	cout << "Пример ввода примера:  4 4 + 4 - " << endl;
 	getline(cin, line);
 
 	istringstream ss(line);

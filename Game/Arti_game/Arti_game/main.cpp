@@ -3,6 +3,8 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
+#define RUS setlocale(LC_ALL, "Russian")
+
 using namespace std;
 using namespace sf;
 
@@ -13,20 +15,62 @@ struct window
 	unsigned int y = 500;
 } windows;
 
+class radian{
+public:
+	int angle = 0;
+
+
+	void setAngle(int _angle){
+		angle += _angle;
+
+		if (angle > 360) angle = 0;
+		if (angle < 0)  angle = 360;
+
+	};
+
+
+};
+
+float random(float min, float max)
+{
+	float rands = (float)(rand()) / RAND_MAX*(max - min) + min;
+
+	if (rands > 0)
+		cout << "Ветер изменил направление ВПРАВУЮ сторону с коэф %: " << rands << endl;
+	else if (rands < 0)
+		cout << "Ветер изменил направление ВЛЕВУЮ сторону с коэф %: " << rands << endl;
+	else
+		cout << "Сейчас нет ветра!" << endl;
+
+	return rands;
+}
+
 //Класс игрока
 class Player
 {
 public:
 	RectangleShape rectangle;		//Сам игрок (квадрат)
 	VertexArray turret;				//Пушка игрока
+	radian test;
 	int player;						//ID игрока
-	float angle;					//Градус пушки
 
-	Player(int _player){
-		angle = 0.0;
-		player = _player;
-		rectangle.setSize(Vector2f(20, 20));
-		rectangle.setFillColor(Color::Green);
+	Player(int player, float x, float y){
+		// == Создание игрока ==
+		rectangle.setPosition(Vector2f(x, y));		//Позиция игрока
+		this->player = player;						//ID игрока
+		rectangle.setSize(Vector2f(20, 20));		//Размер
+		rectangle.setFillColor(Color::Green);		//Цвет
+
+		// == Создание пушки ==
+		Vector2f centerTank = { 0, 0 };
+		centerTank.x = rectangle.getPosition().x + (rectangle.getSize().x / 2);	//Центр танка по x
+		centerTank.y = rectangle.getPosition().y + (rectangle.getSize().y / 2);	//Центр танка по y
+
+		turret.setPrimitiveType(LinesStrip);
+
+		turret.append(centerTank);	//Начало пушки из танка
+		centerTank.y -= 25;
+		turret.append(centerTank);	//Смещение по y на 10
 	};
 
 };
@@ -35,12 +79,16 @@ public:
 class Bullet{
 public:
 	CircleShape shape;	//круг
-	int side;			//В какую сторону летит: 1 - влево, 2 - вправо
-	int who;
 
-	Bullet(Vector2f coord, int _side, int _who){
-		who = _who;
-		side = _side;
+	int who;
+	radian test;
+	float time = 0;
+	float veter = 0;
+
+	Bullet(Vector2f coord, int who, int test, float veter){
+		this->veter = veter;
+		this->test.angle = test;
+		this->who = who;
 		shape.setPosition(coord);
 		shape.setFillColor(Color::Red);
 		shape.setRadius(5);
@@ -48,79 +96,61 @@ public:
 
 	//Обновляем координаты
 	void update(){
-		Vector2f newcoord = { 1, 0 };
+		Vector2f step = {0,0};
+		float testik = test.angle * 3.14159265358979323846f / 180.f;
 
-		if (side == 1){			//Пуля летит влево
-			shape.setPosition(shape.getPosition() - newcoord);
-		}
-		else if (side == 2) {	//Пуля летит вправо
-			shape.setPosition(shape.getPosition() + newcoord);
-		}
+		step.x = (0.32f + veter) * cos(testik);
+		step.y = 0.32f * sin(testik);
+
+		step.y += 0.0015f * time;
+		shape.move(step);
+
+		time += 0.1f;
 	}
 
 
 };
 
 //Функция выстрела
-void Fire(vector<Bullet> &bullet, Player & p, int side){
-	Vector2f coord = { 0, 0 };
-	coord = p.turret[1].position;
-	bullet.push_back(Bullet(coord, side, p.player));
+void Fire(vector<Bullet> &bullet, Player & p, float veter){
+
+	Vector2f coordTurret = p.turret[1].position;
+
+	//дебаг информация о пуле
+	//cout << "Bullet: ( коорд: " << (int)coordTurret.x << ',' << (int)coordTurret.y << " игроком: " << p.player << " угол: " << p.test.angle << " коэф. ветра: " << veter << " )" << endl;
+
+	bullet.push_back(Bullet(coordTurret, p.player, p.test.angle, veter));
 };
 
-//Создание пушки
-void CreateTurret(Player & p){
-	Vector2f pcoord = p.rectangle.getPosition();
-
-	float x = 0, y = 0;
-	float r = 35;
-
-	p.turret.setPrimitiveType(LinesStrip);
-
-	if (p.player == 1){
-		pcoord.x += p.rectangle.getSize().x;
-
-		x = p.rectangle.getPosition().x + r * cos(p.angle);
-		y = p.rectangle.getPosition().y + r * sin(p.angle);
-
-		p.turret.append(pcoord);
-		p.turret.append(Vector2f(x, y));
-	}
-	else if (p.player == 2)
-	{
-		p.angle = 3.1f;
-		x = p.rectangle.getPosition().x + r * cos(p.angle);
-		y = p.rectangle.getPosition().y + r * sin(p.angle);
-
-		p.turret.append(pcoord);
-		p.turret.append(Vector2f(x, y));
-	}
-}
 
 //Смещение пушки
 void move(Player & p, int code){
 	float x = 0, y = 0;
-	float r = 35;
+	float r = 25;
 
-	if (code == Keyboard::Left){
-		p.angle -= 0.1f;
+	if (code == Keyboard::Right){
+		p.test.setAngle(2);
 
-		cout << p.angle << endl;
+		//cout << "Left: "<< p.test.angle << endl;
+		float testik = p.test.angle * 3.14159265358979323846f / 180.f;
 
-		x = p.turret[0].position.x + r * cos(p.angle);
-		y = p.turret[0].position.y + r * sin(p.angle);
+		x = p.turret[0].position.x + r * cos(testik);
+		y = p.turret[0].position.y + r * sin(testik);
+
 
 		p.turret[1].position.x = x;
 		p.turret[1].position.y = y;
 	}
 
-	else if (code == Keyboard::Right){
-		p.angle += 0.1f;
+	else if (code == Keyboard::Left){
+		p.test.setAngle(-2);
 
-		cout << p.angle << endl;
+		//cout << "Right: "<< p.test.angle << endl;
+		float testik = p.test.angle * 3.14159265358979323846f / 180.f;
 
-		x = p.turret[0].position.x + r * cos(p.angle);
-		y = p.turret[0].position.y + r * sin(p.angle);
+		x = p.turret[0].position.x + r * cos(testik);
+		y = p.turret[0].position.y + r * sin(testik);
+
 
 		p.turret[1].position.x = x;
 		p.turret[1].position.y = y;
@@ -145,22 +175,19 @@ bool Check(RectangleShape rect, CircleShape shape){
 
 int main()
 {
+	RUS;						  // Кодировка консли
+	srand((unsigned int)time(0)); // Нужно для рандома, чтобы при каждом запуске было уникальное значение
+
 	short int player = 0;	// ID игрока
+	//направление ветра
+	float veter = random(-0.1f, 0.1f);		//Используется для ветра
 
-	Player p1(++player);	//ID: 1 |левый игрок|
-	Player p2(++player);	//ID: 2 |правый игрок|
-
-	//cout << p1.player << " | " << p2.player << endl;
+	Player p1(++player, 50.f, windows.y - 100.f);	//ID: 1 |левый игрок|
+	Player p2(++player, (windows.x - (p1.rectangle.getSize().x + 50.f)) , (windows.y - 100.f) );	//ID: 2 |правый игрок|
 
 	player = 1; //Сбрасываем, теперь это будет служить в качестве определения какой игрок ходит
 
 	vector<Bullet> bullet;
-
-	p1.rectangle.setPosition(Vector2f(50.f, windows.y - 100.f));												//Устанавливаем позицию первого игрока
-	p2.rectangle.setPosition(Vector2f(windows.x - (p1.rectangle.getSize().x + 50.f), windows.y - 100.f));		//Устанавливаем позицию второго игрока
-
-	CreateTurret(p1);	//Создаём турель первому игроку
-	CreateTurret(p2);	//Создаем турель второму игроку
 
 	RenderWindow window(VideoMode(windows.x, windows.y), "Artillery Game");
 
@@ -180,16 +207,20 @@ int main()
 					move(p2, event.key.code);
 			}
 
-			if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space){
+			if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space && bullet.size() == 0){
+				
 				//чей ход?
 				if (player == 1){
-					Fire(bullet, p1, 2);	//Пуля летит от игрока p1 в правую сторону
+					Fire(bullet, p1, veter);	//Пуля летит от игрока p1 в правую сторону
 					player = 2;				//после выстрела, делаем что ходит другой игрок
 				}
 				else if (player == 2){
-					Fire(bullet, p2, 1);	//Пуля летит от игрока p2 в левую сторону
+					Fire(bullet, p2, veter);	//Пуля летит от игрока p2 в левую сторону
 					player = 1;			//после выстрела, делаем что ходит другой игрок
 				}
+
+				//направление ветра
+				veter = random(-0.1f, 0.1f);	//при каждом выстреле получаем рандомное направление ветра
 
 			}
 		}
@@ -212,23 +243,24 @@ int main()
 		}
 
 		for (vector<Bullet>::iterator it = bullet.begin(); it != bullet.end();){
-			
+
 			//В игрока 1 попали пули?
 			if (Check(p1.rectangle, it->shape)){
-				cout << "In the p1 hit by a bullet" << endl;
+				cout << "В игрока " << it->who << " попала пуля!" << endl;
 				it = bullet.erase(it);	//удаляем пулю
 				break;
 			}
 
 			//В игрока 2 попали пули?
 			if (Check(p2.rectangle, it->shape)){
-				cout << "In the p2 hit by a bullet" << endl;
+				cout << "В игрока " << it->who << " попала пуля!" << endl;
 				it = bullet.erase(it);	//удаляем пулю
 				break;
 			}
 
 			//улетела пулька за экран?
-			if (it->shape.getPosition().x >= windows.x || it->shape.getPosition().x <= 0){
+			if (it->shape.getPosition().x >= windows.x || it->shape.getPosition().x <= 0	
+				|| it->shape.getPosition().y >= windows.y || it->shape.getPosition().y <= 0){
 				it = bullet.erase(it);	//удаляем пули если улетела за границу
 				break;
 			}
