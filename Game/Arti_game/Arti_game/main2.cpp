@@ -107,7 +107,7 @@ void move(Player & p, int code){
 	float x = 0, y = 0;
 	float r = 25;
 
-	if (code == Keyboard::Left){
+	if (code == Keyboard::Right){
 		p.test.setAngle(2);
 
 		cout << "Left: "<< p.test.angle << endl;
@@ -121,7 +121,7 @@ void move(Player & p, int code){
 		p.turret[1].position.y = y;
 	}
 
-	else if (code == Keyboard::Right){
+	else if (code == Keyboard::Left){
 		p.test.setAngle(-2);
 
 		cout << "Right: "<< p.test.angle << endl;
@@ -181,7 +181,7 @@ int main()
 					move(p2, event.key.code);
 			}
 
-			if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space){
+			if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space && bullet.size() == 0){
 				//чей ход?
 				if (player == 1){
 					Fire(bullet, p1);	//Пуля летит от игрока p1 в правую сторону
@@ -229,7 +229,8 @@ int main()
 			}
 
 			//улетела пулька за экран?
-			if (it->shape.getPosition().x >= windows.x || it->shape.getPosition().x <= 0){
+			if (it->shape.getPosition().x >= windows.x || it->shape.getPosition().x <= 0	
+				|| it->shape.getPosition().y >= windows.y || it->shape.getPosition().y <= 0){
 				it = bullet.erase(it);	//удаляем пули если улетела за границу
 				break;
 			}
